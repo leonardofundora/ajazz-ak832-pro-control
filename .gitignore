@@ -1,0 +1,9 @@
+.venv/
+.venv-mac/
+build/
+dist/
+*.spec
+*.zip
+__pycache__/
+*.pyc
+.DS_Store
