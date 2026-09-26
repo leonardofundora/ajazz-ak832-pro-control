@@ -1,5 +1,5 @@
 @echo off
-rem Crea dist\AJAZZ Control\AJAZZ Control.exe
+rem Builds dist\AJAZZ Control\AJAZZ Control.exe
 cd /d "%~dp0"
 python -m venv .venv
 call .venv\Scripts\activate.bat

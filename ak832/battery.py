@@ -1,4 +1,4 @@
-"""Nivel de batería del teclado por Bluetooth (servicio estándar 0x180F). Solo lectura."""
+"""Keyboard battery level over Bluetooth (standard 0x180F service). Read-only."""
 
 import plistlib
 import subprocess
@@ -9,13 +9,13 @@ BATTERY_LEVEL = "00002a19-0000-1000-8000-00805f9b34fb"
 
 
 def read_battery(ble_address=None):
-    """Porcentaje 0-100, o None si no se puede leer."""
+    """Percentage 0-100, or None if it can't be read."""
     try:
         if sys.platform == "win32" and ble_address:
             return _read_windows(int(ble_address, 16))
         if sys.platform == "darwin":
             return _read_mac()
-    except Exception:  # noqa: BLE001 - la batería es solo informativa
+    except Exception:  # noqa: BLE001 - battery is informational only
         return None
     return None
 
@@ -45,7 +45,7 @@ def _read_windows(address):
 
 
 def _read_mac():
-    # macOS publica la batería de los teclados Bluetooth en el registro de IOKit.
+    # macOS publishes Bluetooth keyboard battery levels in the IOKit registry.
     out = subprocess.run(["ioreg", "-r", "-a", "-k", "BatteryPercent"], capture_output=True, timeout=5).stdout
     if not out:
         return None

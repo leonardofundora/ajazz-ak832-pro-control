@@ -1,2 +1,2 @@
-"""Control del teclado AJAZZ AK832 Pro sin el driver oficial."""
+"""Control the AJAZZ AK832 Pro keyboard without the official driver."""
 __version__ = "1.0.0"

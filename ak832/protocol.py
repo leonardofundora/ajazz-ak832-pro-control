@@ -1,21 +1,24 @@
-"""Paquetes HID del AJAZZ AK832 Pro.
+"""HID packets for the AJAZZ AK832 Pro.
 
-Todo se extrajo del driver oficial de Windows (DeviceDriver.exe V1.0):
+Everything was extracted from the official Windows driver (DeviceDriver.exe V1.0)
+and verified on a real keyboard:
 
-  hora     0x437B20   18 -> 28 -> datos -> 02
-  luces    0x42D290   18 -> 13 -> datos -> 02 -> F0
-  ajustes  0x436B20   18 -> 17 -> datos -> 02
-  pantalla 0x4237A0   18 -> 72 -> N bloques de 4096 B (interfaz de imágenes) -> 02
+  time     0x437B20   18 -> 28 -> data -> 02
+  lights   0x42D290   18 -> 13 -> data -> 02 -> F0
+  settings 0x436B20   18 -> 17 -> data -> 02
+  screen   0x4237A0   18 -> 72 -> N chunks of 4096 B (image interface) -> 02
 
-Los paquetes de control son de 64 bytes y viajan como HID Feature Report con
-Report ID 0x00 delante (65 bytes en total) por la interfaz 3 (usage page 0xFF13).
-Las imágenes viajan como Output Report [0x00] + 4096 bytes por la interfaz 2
+Control packets are 64 bytes and travel as HID feature reports prefixed with
+report ID 0x00 (65 bytes total) on interface 3 (usage page 0xFF13).
+Images travel as output reports [0x00] + 4096 bytes on interface 2
 (usage page 0xFF68).
 """
 
 from dataclasses import dataclass
 from datetime import datetime
 from enum import IntEnum
+
+from .i18n import tr
 
 PACKET_LEN = 64
 TAIL = (0xAA, 0x55)
@@ -51,7 +54,7 @@ def finish() -> bytes:
     return command(CMD_FINISH)
 
 
-# --- Hora -------------------------------------------------------------------
+# --- Time -------------------------------------------------------------------
 
 def time_preamble() -> bytes:
     return command(CMD_TIME, b8=0x01)
@@ -72,7 +75,7 @@ def time_data(t: datetime, slot: int = 1) -> bytes:
     return bytes(p)
 
 
-# --- Luces ------------------------------------------------------------------
+# --- Lights -----------------------------------------------------------------
 
 class Effect(IntEnum):
     OFF = 0x00
@@ -97,28 +100,32 @@ class Effect(IntEnum):
     SHUTTLE = 0x13
 
 
-EFFECT_NAMES = {
-    Effect.STATIC: "Estático",
-    Effect.SINGLE_ON: "Tecla se enciende",
-    Effect.SINGLE_OFF: "Tecla se apaga",
-    Effect.GLITTERING: "Destellos",
-    Effect.FALLING: "Lluvia",
-    Effect.COLOURFUL: "Multicolor",
-    Effect.BREATH: "Respiración",
-    Effect.SPECTRUM: "Espectro",
-    Effect.OUTWARD: "Hacia afuera",
-    Effect.SCROLLING: "Desplazamiento",
-    Effect.ROLLING: "Rodando",
-    Effect.ROTATING: "Rotación",
-    Effect.EXPLODE: "Explosión",
-    Effect.LAUNCH: "Lanzamiento",
-    Effect.RIPPLES: "Ondas",
-    Effect.FLOWING: "Flujo",
-    Effect.PULSATING: "Pulso",
-    Effect.TILT: "Inclinación",
-    Effect.SHUTTLE: "Lanzadera",
-    Effect.OFF: "Apagado",
+_EFFECT_NAMES = {
+    Effect.STATIC: "Static",
+    Effect.SINGLE_ON: "Single on",
+    Effect.SINGLE_OFF: "Single off",
+    Effect.GLITTERING: "Glittering",
+    Effect.FALLING: "Falling",
+    Effect.COLOURFUL: "Colourful",
+    Effect.BREATH: "Breath",
+    Effect.SPECTRUM: "Spectrum",
+    Effect.OUTWARD: "Outward",
+    Effect.SCROLLING: "Scrolling",
+    Effect.ROLLING: "Rolling",
+    Effect.ROTATING: "Rotating",
+    Effect.EXPLODE: "Explode",
+    Effect.LAUNCH: "Launch",
+    Effect.RIPPLES: "Ripples",
+    Effect.FLOWING: "Flowing",
+    Effect.PULSATING: "Pulsating",
+    Effect.TILT: "Tilt",
+    Effect.SHUTTLE: "Shuttle",
+    Effect.OFF: "Off",
 }
+
+
+def effect_name(e) -> str:
+    return tr(_EFFECT_NAMES.get(e, str(e)))
 
 
 class Direction(IntEnum):
@@ -143,7 +150,7 @@ MAX_SPEED = 5
 class Lighting:
     effect: Effect = Effect.STATIC
     color: tuple = (255, 255, 255)
-    custom_color: bool = True  # byte 8: 0 = color elegido, 1 = multicolor (probado en el teclado)
+    custom_color: bool = True  # byte 8: 0 = chosen color, 1 = multicolor (verified on the keyboard)
     brightness: int = 5
     speed: int = 3
     direction: Direction = Direction.LEFT
@@ -165,7 +172,7 @@ def light_data(l: Lighting) -> bytes:
     return bytes(p)
 
 
-# --- Ajustes ----------------------------------------------------------------
+# --- Settings ---------------------------------------------------------------
 
 class Sleep(IntEnum):
     NEVER = 0
@@ -174,12 +181,16 @@ class Sleep(IntEnum):
     MIN_30 = 3
 
 
-SLEEP_NAMES = {
-    Sleep.NEVER: "Nunca",
-    Sleep.MIN_1: "1 minuto",
-    Sleep.MIN_5: "5 minutos",
-    Sleep.MIN_30: "30 minutos",
+_SLEEP_NAMES = {
+    Sleep.NEVER: "Never",
+    Sleep.MIN_1: "1 minute",
+    Sleep.MIN_5: "5 minutes",
+    Sleep.MIN_30: "30 minutes",
 }
+
+
+def sleep_name(s) -> str:
+    return tr(_SLEEP_NAMES[s])
 
 
 @dataclass
@@ -189,7 +200,7 @@ class Settings:
     block_alt_f4: bool = False
     block_win: bool = False
     light_sleep: Sleep = Sleep.MIN_5
-    key_response: int = 2  # 1..5, el driver usa 2 por defecto
+    key_response: int = 2  # 1..5, the driver defaults to 2
 
 
 def settings_preamble(profile: int = 1) -> bytes:
@@ -209,7 +220,7 @@ def settings_data(s: Settings) -> bytes:
     return bytes(p)
 
 
-# --- Pantalla ---------------------------------------------------------------
+# --- Screen -----------------------------------------------------------------
 
 SCREEN_W = 160
 SCREEN_H = 96
@@ -226,7 +237,7 @@ def image_preamble(chunks: int, slot: int = 1) -> bytes:
 
 
 def animation_blob(frames_rgb565: list, delays_ms: list) -> bytes:
-    """Cabecera de 256 bytes + cuadros, rellenado con 0xFF hasta múltiplo de 4096."""
+    """256-byte header + frames, padded with 0xFF to a multiple of 4096."""
     n = min(len(frames_rgb565), MAX_FRAMES)
     header = bytearray(b"\xff" * HEADER_BYTES)
     header[0] = n

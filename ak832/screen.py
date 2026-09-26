@@ -1,4 +1,4 @@
-"""Conversión de imágenes/GIF al formato de la pantalla (160x96, RGB565 little-endian)."""
+"""Converts images/GIFs to the screen format (160x96, little-endian RGB565)."""
 
 from PIL import Image, ImageOps, ImageSequence
 
@@ -8,7 +8,7 @@ SIZE = (P.SCREEN_W, P.SCREEN_H)
 
 
 def fit_frame(img: Image.Image, mode: str = "fill", background=(0, 0, 0)) -> Image.Image:
-    """mode: 'fill' recorta para llenar, 'fit' encaja con bordes, 'stretch' deforma."""
+    """mode: 'fill' crops to fill, 'fit' letterboxes, 'stretch' distorts."""
     img = img.convert("RGBA")
     if mode == "stretch":
         out = img.resize(SIZE, Image.LANCZOS)
@@ -22,7 +22,7 @@ def fit_frame(img: Image.Image, mode: str = "fill", background=(0, 0, 0)) -> Ima
 
 
 def load_frames(path: str, mode: str = "fill"):
-    """Devuelve (lista de imágenes 160x96 RGB, lista de retardos en ms)."""
+    """Returns (list of 160x96 RGB images, list of delays in ms)."""
     src = Image.open(path)
     frames, delays = [], []
     for f in ImageSequence.Iterator(src):
@@ -35,7 +35,7 @@ def load_frames(path: str, mode: str = "fill"):
 
 
 def to_rgb565(img: Image.Image) -> bytes:
-    """Igual que mui.dll GetImageRGB565Data: (R&F8)<<8 | (G&FC)<<3 | B>>3, byte bajo primero."""
+    """Same as mui.dll GetImageRGB565Data: (R&F8)<<8 | (G&FC)<<3 | B>>3, low byte first."""
     img = img.convert("RGB")
     if img.size != SIZE:
         img = img.resize(SIZE)

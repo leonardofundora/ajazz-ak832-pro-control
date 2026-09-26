@@ -1,53 +1,55 @@
 # AJAZZ AK832 Pro Control
 
-App de código abierto para el teclado **AJAZZ AK832 Pro** en **macOS y Windows**, sin el driver oficial.
-Pone la hora de la pantalla, cambia las luces, sube imágenes o GIFs a la pantallita y guarda los ajustes del teclado.
+Open-source app for the **AJAZZ AK832 Pro** keyboard on **macOS and Windows**, no official driver needed.
+Set the clock on its screen, change the lighting, upload images or GIFs to the little display, and save the
+keyboard's settings.
 
 <p align="center">
-  <img src="docs/reloj-claro.png" width="49%" alt="Reloj, modo claro">
-  <img src="docs/luces-oscuro.png" width="49%" alt="Luces, modo oscuro">
+  <img src="docs/clock-light.png" width="49%" alt="Clock, light mode">
+  <img src="docs/lights-dark.png" width="49%" alt="Lights, dark mode">
 </p>
 <p align="center">
-  <img src="docs/pantalla-claro.png" width="49%" alt="Pantalla, modo claro">
-  <img src="docs/ajustes-oscuro.png" width="49%" alt="Ajustes, modo oscuro">
+  <img src="docs/screen-light.png" width="49%" alt="Screen, light mode">
+  <img src="docs/settings-dark.png" width="49%" alt="Settings, dark mode">
 </p>
 
-| Sección | Qué hace |
+| Section | What it does |
 |---|---|
-| **Reloj** | Pone la hora del teclado (la de tu equipo o una que elijas). Puede sincronizarla sola cada vez que conectas el cable. |
-| **Luces** | Los 19 efectos del driver y "Apagado", con color, brillo, velocidad y dirección. |
-| **Pantalla** | Sube una imagen o un GIF animado (hasta 255 cuadros) a la pantalla de 160×96. |
-| **Ajustes** | Apagado de luces por inactividad, tiempo de respuesta de teclas, modo juego y apariencia. |
-| **Atajos** | Las combinaciones Fn del teclado. |
+| **Clock** | Sets the keyboard's time (your computer's, or one you pick). Can sync it automatically every time you plug in the cable. |
+| **Lights** | The driver's 19 effects plus "Off", with color, brightness, speed and direction. |
+| **Screen** | Uploads an image or animated GIF (up to 255 frames) to the 160×96 display. |
+| **Settings** | Turn lights off when idle, key response time, game mode, appearance and language. |
+| **Shortcuts** | The keyboard's Fn key combinations. |
 
-- Diseño inspirado en **Liquid Glass** (macOS 26), con modo claro y oscuro que sigue al sistema o se elige a mano.
-- La barra lateral muestra si el teclado está conectado y, por Bluetooth, su **batería**.
-- Se puede quedar en segundo plano y abrirse al iniciar sesión.
+- Design inspired by **Liquid Glass** (macOS 26), with light and dark mode that follow the system or can be set manually.
+- **English and Spanish**: the app follows your system language, or you can pick one in Settings.
+- The sidebar shows whether the keyboard is connected and, over Bluetooth, its **battery level**.
+- It can stay in the background and open at login.
 
 > [!IMPORTANT]
-> Para configurar el teclado hay que conectarlo **con el cable USB**. Por Bluetooth o por el receptor 2.4G el
-> teclado no expone el canal de configuración (tampoco funciona con el driver oficial).
+> To configure the keyboard it must be connected **with the USB cable**. Over Bluetooth or the 2.4G receiver the
+> keyboard doesn't expose its configuration channel (the official driver doesn't work that way either).
 
-## Instalación
+## Installation
 
 ### macOS
 
-1. Instala Python 3 desde <https://www.python.org/downloads/macos/>.
-2. Descarga este repositorio (botón **Code → Download ZIP**) y descomprímelo.
-3. En **Terminal**, escribe `bash ` (con un espacio), arrastra `build_mac.sh` a la ventana y pulsa Enter.
-4. Se crea `dist/AJAZZ Control.app`. Muévela a **Aplicaciones** y ábrela la primera vez con **clic derecho → Abrir**
-   (no está firmada por Apple).
+1. Install Python 3 from <https://www.python.org/downloads/macos/>.
+2. Download this repository (**Code → Download ZIP**) and unzip it.
+3. In **Terminal**, type `bash ` (with a trailing space), drag `build_mac.sh` into the window and press Enter.
+4. This creates `dist/AJAZZ Control.app`. Move it to **Applications** and open it the first time with
+   **right-click → Open** (it isn't signed by Apple).
 
-Si dice que no puede abrir el teclado: **Ajustes del Sistema → Privacidad y seguridad → Monitorización de entrada**
-y activa *AJAZZ Control*.
+If it says it can't open the keyboard: **System Settings → Privacy & Security → Input Monitoring** and enable
+*AJAZZ Control*.
 
 ### Windows
 
-Ejecuta `build_windows.bat` (necesita Python 3). El programa queda en `dist\AJAZZ Control\AJAZZ Control.exe`.
+Run `build_windows.bat` (requires Python 3). The app ends up in `dist\AJAZZ Control\AJAZZ Control.exe`.
 
-Cierra el driver oficial de AJAZZ mientras usas la app: si están abiertos los dos, los comandos se mezclan.
+Close the official AJAZZ driver while using the app: if both are open, their commands get mixed up.
 
-### Desde el código
+### From source
 
 ```bash
 python3 -m venv .venv
@@ -56,44 +58,49 @@ pip install -r requirements.txt
 python ajazz_control.py
 ```
 
-## Consejos
+## Tips
 
-- ¿Las luces no se encienden después de aplicar un efecto? Están apagadas desde el teclado: pulsa **Fn + X**.
-- Subir una imagen **reemplaza** la animación de la pantalla. Para ver solo el reloj y el estado, ocúltala con **Fn + Supr**.
-- Activa *Sincronizar al conectar el cable* y *Abrir al iniciar sesión*: el reloj se pondrá en hora cada vez que cargues el teclado.
+- Lights don't turn on after applying an effect? They're switched off on the keyboard itself: press **Fn + X**.
+- Uploading an image **replaces** the screen's animation. To see only the clock and status, hide it with **Fn + Del**.
+- Turn on *Sync when the cable is connected* and *Open at login*: the clock will be set every time you charge the keyboard.
 
-## Línea de comandos
+## Command line
 
 ```bash
-python3 ak832cli.py hora
-python3 ak832cli.py luces breath 00ffcc --brillo 4 --velocidad 2
-python3 ak832cli.py pantalla mi_gif.gif --ajuste fit
-python3 ak832cli.py ajustes --sleep 2 --respuesta 2
+python3 ak832cli.py time
+python3 ak832cli.py lights breath 00ffcc --brightness 4 --speed 2
+python3 ak832cli.py screen my.gif --scaling fit
+python3 ak832cli.py settings --sleep 2 --response 2
 ```
 
-## Cómo funciona
+## How it works
 
-El protocolo se obtuvo analizando el driver oficial de Windows (`DeviceDriver.exe` V1.0) y se probó en un
-AK832 Pro real (VID `05AC`, PID `024F`). Todo va por HID con [hidapi](https://github.com/trezor/cython-hidapi):
+The protocol was obtained by analyzing the official Windows driver (`DeviceDriver.exe` V1.0) and verified on a
+real AK832 Pro (VID `05AC`, PID `024F`). Everything goes over HID using [hidapi](https://github.com/trezor/cython-hidapi):
 
-| Interfaz | Uso | Transporte |
+| Interface | Used for | Transport |
 |---|---|---|
-| 3 (usage page `0xFF13`) | Hora, luces y ajustes | Feature reports de 65 bytes |
-| 2 (usage page `0xFF68`) | Imágenes de la pantalla | Output reports de 4097 bytes, RGB565 |
+| 3 (usage page `0xFF13`) | Time, lights and settings | 65-byte feature reports |
+| 2 (usage page `0xFF68`) | Screen images | 4097-byte output reports, RGB565 |
 
-Cada comando va en una secuencia `18` (inicio) → comando (`28` hora, `13` luces, `17` ajustes, `72` imagen) → datos
-→ `02` (guardar). Los bytes exactos están documentados en [`ak832/protocol.py`](ak832/protocol.py).
+Each command is a sequence: `18` (start) → command (`28` time, `13` lights, `17` settings, `72` image) → data
+→ `02` (save). The exact bytes are documented in [`ak832/protocol.py`](ak832/protocol.py).
 
-Por Bluetooth solo se lee la batería (servicio GATT estándar `0x180F`). El servicio propio del fabricante (`FEE0`)
-acepta escrituras pero ignora los comandos de configuración.
+Over Bluetooth only the battery level can be read (standard GATT service `0x180F`). The vendor service (`FEE0`)
+accepts writes but ignores the configuration commands.
 
-**Pendiente de verificar:** qué byte bloquea cada tecla en el modo juego (Win, Alt+F4, Alt+Tab); el orden se dedujo
-de la interfaz del driver. La lectura de batería en macOS (vía `ioreg`) no se ha probado.
+**Not yet verified:** which byte blocks which key in game mode (Win, Alt+F4, Alt+Tab); the order was inferred from
+the driver's UI. Reading the battery on macOS (via `ioreg`) hasn't been tested.
 
-## Aviso
+## Translations
 
-Proyecto no oficial, sin relación con AJAZZ. Úsalo bajo tu responsabilidad.
+UI strings are written in English in the code and translated through `tr()`. Spanish lives in
+[`ak832/i18n.py`](ak832/i18n.py); adding another language means adding a similar dictionary.
 
-## Licencia
+## Disclaimer
+
+Unofficial project, not affiliated with AJAZZ. Use at your own risk.
+
+## License
 
 [MIT](LICENSE)

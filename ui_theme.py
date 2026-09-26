@@ -1,6 +1,6 @@
-"""Tema inspirado en Liquid Glass (macOS 26 Tahoe): vidrio translúcido, barra lateral flotante,
-controles en cápsula y esquinas concéntricas. Qt no tiene el material de vidrio real de Apple,
-así que se imita con paneles translúcidos sobre un fondo de color suave."""
+"""Theme inspired by Liquid Glass (macOS 26 Tahoe): translucent glass, floating sidebar,
+capsule controls and concentric corners. Qt doesn't have Apple's real glass material,
+so it's approximated with translucent panels over a soft colored backdrop."""
 
 import os
 import sys
@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
 
 IS_MAC = sys.platform == "darwin"
 
-# Radios concéntricos: ventana > panel (22) > grupo (18) > control (cápsula).
+# Concentric radii: window > panel (22) > group (18) > control (capsule).
 R_PANEL, R_GROUP = 22, 18
 
 LIGHT = dict(
@@ -46,9 +46,9 @@ DARK = dict(
     green="#30D158", screen="#000000",
 )
 
-current = dict(LIGHT)  # los controles pintados a mano leen de aquí
+current = dict(LIGHT)  # custom-painted controls read their colors from here
 
-# --------------------------------------------------------------------------- íconos (trazos tipo SF Symbols)
+# --------------------------------------------------------------------------- icons (SF Symbols-like strokes)
 
 GLYPHS = {
     "clock": '<circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="2"/>'
@@ -82,7 +82,7 @@ def _svg_pixmap(svg, size, ratio=2.0):
 
 
 def tile_icon(name, size=24):
-    """Ícono en un 'squircle' con degradado y brillo, como la barra lateral de Ajustes en Tahoe."""
+    """Icon on a gradient 'squircle' with a highlight, like the System Settings sidebar in Tahoe."""
     top, bottom = TILE_COLORS[name]
     svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs>'
            '<linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/>'
@@ -111,7 +111,7 @@ def _chevron_file(color, name):
     return path.replace("\\", "/")
 
 
-# --------------------------------------------------------------------------- hoja de estilos
+# --------------------------------------------------------------------------- stylesheet
 
 def stylesheet(t):
     dark = t["dark"]
@@ -197,10 +197,10 @@ QMenu::item:selected {{ background: {t['accent']}; color: {t['accent_text']}; }}
 """
 
 
-# --------------------------------------------------------------------------- fondo y efectos
+# --------------------------------------------------------------------------- backdrop and effects
 
 class Backdrop(QWidget):
-    """Fondo de la ventana: color base con manchas de luz difusas para que el vidrio 'refracte' algo."""
+    """Window backdrop: base color with soft light blobs so the glass has something to 'refract'."""
 
     def paintEvent(self, _):
         t = current
@@ -221,7 +221,7 @@ class Backdrop(QWidget):
 
 
 class ScrollEdge(QWidget):
-    """Efecto de borde suave (scroll edge): el contenido se desvanece bajo el borde superior."""
+    """Soft scroll edge effect: content fades out under the top edge."""
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -248,10 +248,10 @@ def float_shadow(widget, blur=36, alpha=None):
     return fx
 
 
-# --------------------------------------------------------------------------- controles
+# --------------------------------------------------------------------------- controls
 
 class Toggle(QAbstractButton):
-    """Interruptor al estilo macOS 26: pista en cápsula y perilla de vidrio alargada."""
+    """macOS 26-style switch: capsule track and an elongated glass knob."""
 
     W, H = 46, 26
 
@@ -282,7 +282,7 @@ class Toggle(QAbstractButton):
         self._pos = v
         self.update()
 
-    knob = Property(float, _get_pos, _set_pos)  # no llamarla "pos": QWidget ya la usa
+    knob = Property(float, _get_pos, _set_pos)  # don't call it "pos": QWidget already uses that
 
     def paintEvent(self, _):
         t = current
@@ -313,7 +313,7 @@ class Toggle(QAbstractButton):
 
 
 class Segmented(QWidget):
-    """Control segmentado en cápsula. changed(data) al elegir."""
+    """Capsule segmented control. Emits changed(data) on selection."""
 
     changed = Signal(object)
 
@@ -348,7 +348,7 @@ class Segmented(QWidget):
                 self.group.button(i).setChecked(True)
 
 
-# --------------------------------------------------------------------------- composición
+# --------------------------------------------------------------------------- layout helpers
 
 def text(s, name=None, wrap=False):
     l = QLabel(s)
@@ -365,7 +365,7 @@ def separator():
 
 
 def row(title, control=None, subtitle=None):
-    """Fila de un grupo: título (y subtítulo) a la izquierda, control a la derecha."""
+    """Group row: title (and subtitle) on the left, control on the right."""
     w = QWidget()
     h = QHBoxLayout(w)
     h.setContentsMargins(18, 11, 14, 11)
@@ -385,7 +385,7 @@ def row(title, control=None, subtitle=None):
 
 
 def group(*rows, header=None, footer=None, padded=False):
-    """Grupo de vidrio con esquinas grandes y filas separadas por líneas finas."""
+    """Glass group with large corners and rows separated by hairlines."""
     outer = QWidget()
     v = QVBoxLayout(outer)
     v.setContentsMargins(0, 0, 0, 0)

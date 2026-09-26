@@ -1,10 +1,10 @@
 #!/bin/bash
-# Crea "AJAZZ Control.app" en la carpeta dist/.  Uso:  bash build_mac.sh
+# Builds "AJAZZ Control.app" in the dist/ folder.  Usage:  bash build_mac.sh
 set -e
 cd "$(dirname "$0")"
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "Falta Python 3. Instálalo desde https://www.python.org/downloads/macos/ y vuelve a ejecutar."
+  echo "Python 3 is missing. Install it from https://www.python.org/downloads/macos/ and run this again."
   exit 1
 fi
 
@@ -21,5 +21,5 @@ pyinstaller --noconfirm --clean --windowed \
   ajazz_control.py
 
 echo
-echo "Listo: dist/AJAZZ Control.app"
-echo "Arrástrala a Aplicaciones. La primera vez ábrela con clic derecho > Abrir."
+echo "Done: dist/AJAZZ Control.app"
+echo "Drag it to Applications. The first time, open it with right-click > Open."
